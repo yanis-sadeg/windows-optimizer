@@ -135,6 +135,7 @@ foreach ($app in $startupApps) {
     Get-ScheduledTask | Where-Object { $_.TaskName -like "*$app*" } | Disable-ScheduledTask
     Get-Process | Where-Object { $_.Name -like "*$app*" } | Stop-Process -Force -ErrorAction SilentlyContinue
 }
+Get-AppxPackage *XboxGamingOverlay* | Remove-AppxPackage
 Write-Host "✅ OneDrive et XboxApp désactivés au démarrage !`n" -ForegroundColor Green
 
 # ==============================
