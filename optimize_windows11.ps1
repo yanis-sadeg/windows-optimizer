@@ -136,6 +136,9 @@ foreach ($app in $startupApps) {
     Get-Process | Where-Object { $_.Name -like "*$app*" } | Stop-Process -Force -ErrorAction SilentlyContinue
 }
 Get-AppxPackage *XboxGamingOverlay* | Remove-AppxPackage
+New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\GameDVR" -Name "AppCaptureEnabled" -Value 0 -PropertyType DWord -Force
+Stop-Process -Name explorer -Force
+Start-Process explorer
 Write-Host "✅ OneDrive et XboxApp désactivés au démarrage !`n" -ForegroundColor Green
 
 # ==============================
