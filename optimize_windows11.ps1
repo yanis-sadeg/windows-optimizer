@@ -1,6 +1,6 @@
 ﻿Add-Type -AssemblyName "System.Windows.Forms"
 
-# Exemple d'une opération
+# Message du début d'exécution du script
 Write-Host "Opération en cours...`n"
 
 # ==============================
