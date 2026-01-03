@@ -29,12 +29,11 @@ This PowerShell script optimizes Windows 11 by disabling unnecessary features, i
 - Disable OneDrive and Xbox Auto-Start
 - Disable Windows Tips and Suggestions
 - Disable Transparency Effects
-- Disable Virtual Machine Platform (VMP)
 - Enable Hardware-Accelerated GPU Scheduling
 - Enable Variable Refresh Rate (VRR)
 - Enable Game Mode for Better Performance
 - Disable Pointer Precision Enhancement (for FPS Games)
-- Set Google DNS (8.8.8.8, 8.8.4.4) for Wi-Fi & Ethernet
+- Set Cloudflare DNS (1.1.1.1, 1.0.0.1) for Wi-Fi & Ethernet
   
 ## 🛠️ Notes
 This script is designed for Windows 11 and may not work correctly on other versions.

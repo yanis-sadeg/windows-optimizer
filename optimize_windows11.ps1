@@ -95,7 +95,6 @@ $privacySettings = @{
     "AllowCortana"                           = 0
     "AllowInputPersonalization"              = 0
     "LetAppsAccessCallHistory"               = 0
-    "LetAppsAccessMicrophone"                = 0
     "ClipboardHistoryEnabled"                = 0
     "CloudClipboardEnabled"                  = 0
 }
@@ -174,20 +173,6 @@ reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeli
 Write-Host "✅ Conseils et astuces Windows désactivés !`n" -ForegroundColor Green
 
 # ==============================
-# 🔹 Désactivation de l'intégrité de la mémoire
-# ==============================
-Write-Host "===> Désactivation de l'intégrité de la mémoire pour augmenter les performances en jeu" -ForegroundColor Green
-reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" /v "Enabled" /t REG_DWORD /d 0 /f
-Write-Host "✅ Intégrité de la mémoire désactivée !`n" -ForegroundColor Green
-
-# ==============================
-# 🔹 Désactivation de Virtual Machine Platform (VMP)
-# ==============================
-Write-Host "===> Désactivation de la VMP" -ForegroundColor Green
-Disable-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" -NoRestart
-Write-Host "✅ Virtual Machine Platform (VMP) désactivée !`n" -ForegroundColor Green
-
-# ==============================
 # 🔹 Désactivation de l'effet de transparence des fenêtres
 # ==============================
 Write-Host "===> Désactivation de l'effet de transparence des fenêtres" -ForegroundColor Green
@@ -222,18 +207,18 @@ Write-Host "Mode de jeu activé !`n" -ForegroundColor Green
 # Configuration DNS pour la connexion Wi-Fi (si elle existe)
 $wifiInterface = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' -and $_.Name -like '*Wi-Fi*' }
 if ($wifiInterface) {
-	Write-Host "===> Configuration du DNS Google sur le réseau Wi-Fi" -ForegroundColor Green
-    Set-DnsClientServerAddress -InterfaceIndex $wifiInterface.InterfaceIndex -ServerAddresses ('8.8.8.8', '8.8.4.4')
-    Write-Host "DNS 8.8.8.8 et 8.8.4.4 configurés pour Wi-Fi"
+	Write-Host "===> Configuration du DNS Cloudflare sur le réseau Wi-Fi" -ForegroundColor Green
+    Set-DnsClientServerAddress -InterfaceIndex $wifiInterface.InterfaceIndex -ServerAddresses ('1.1.1.1', '1.0.0.1')
+    Write-Host "DNS 1.1.1.1 et 1.0.0.1 configurés pour Wi-Fi"
 	Write-Host "✅ DNS configurés sur le réseau Wi-Fi !`n" -ForegroundColor Green
 }
 
 # Configuration DNS pour la connexion Ethernet (si elle existe)
 $ethernetInterface = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' -and $_.Name -like '*Ethernet*' }
 if ($ethernetInterface) {
-	Write-Host "===> Configuration du DNS Google sur le réseau Ethernet" -ForegroundColor Green
-    Set-DnsClientServerAddress -InterfaceIndex $ethernetInterface.InterfaceIndex -ServerAddresses ('8.8.8.8', '8.8.4.4')
-    Write-Host "DNS 8.8.8.8 et 8.8.4.4 configurés pour Ethernet"
+	Write-Host "===> Configuration du DNS Cloudflare sur le réseau Ethernet" -ForegroundColor Green
+    Set-DnsClientServerAddress -InterfaceIndex $ethernetInterface.InterfaceIndex -ServerAddresses ('1.1.1.1', '1.0.0.1')
+    Write-Host "DNS 1.1.1.1 et 1.0.0.1 configurés pour Ethernet"
 	Write-Host "✅ DNS configurés sur le réseau Ethernet !`n" -ForegroundColor Green
 }
 
