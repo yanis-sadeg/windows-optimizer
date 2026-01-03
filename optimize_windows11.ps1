@@ -68,11 +68,27 @@ if ($powerConfig -match "DCSETTINGINDEX") {
 # 🔹 Désactivation de la mise en veille des périphériques USB
 # ==============================
 Write-Host "===> Désactivation de la mise en veille des périphériques USB" -ForegroundColor Green
-$devices = Get-PnpDevice | Where-Object { $_.Status -eq "OK" -and $_.Class -eq "USB" }
-foreach ($device in $devices) {
+
+# 1. Désactiver USB Selective Suspend dans les plans d'alimentation (AC et batterie)
+powercfg /SETACVALUEINDEX SCHEME_CURRENT 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0 2>$null
+powercfg /SETDCVALUEINDEX SCHEME_CURRENT 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0 2>$null
+powercfg /SETACTIVE SCHEME_CURRENT 2>$null
+
+# 2. Désactiver SelectiveSuspendEnabled et AllowIdleIrpInD3 pour les périphériques USB
+$usbDevices = Get-PnpDevice | Where-Object { $_.Status -eq "OK" -and ($_.Class -eq "USB" -or $_.Class -eq "USBDevice") }
+foreach ($device in $usbDevices) {
     $deviceId = $device.InstanceId
-    reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Enum\$deviceId\Device Parameters" /v "AllowIdleIrpInD3" /t REG_DWORD /d 0 /f
+    reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Enum\$deviceId\Device Parameters" /v "SelectiveSuspendEnabled" /t REG_DWORD /d 0 /f 2>$null
+    reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Enum\$deviceId\Device Parameters" /v "AllowIdleIrpInD3" /t REG_DWORD /d 0 /f 2>$null
 }
+
+# 3. Désactiver la gestion d'alimentation avancée des USB Root Hubs
+$usbRootHubs = Get-WmiObject Win32_USBHub 2>$null
+foreach ($hub in $usbRootHubs) {
+    $pnpDeviceId = $hub.PNPDeviceID
+    reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Enum\$pnpDeviceId\Device Parameters" /v "EnhancedPowerManagementEnabled" /t REG_DWORD /d 0 /f 2>$null
+}
+
 Write-Host "✅ Mise en veille des périphériques USB désactivée !`n" -ForegroundColor Green
 
 # ==============================
